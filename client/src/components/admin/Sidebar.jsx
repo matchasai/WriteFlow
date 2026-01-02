@@ -73,6 +73,15 @@ const Sidebar = ({ open = false, onClose }) => {
           <img src={assets.comment_icon} alt="" className='min-w-4 w-5' />
           <p>Comments</p>
         </NavLink>
+
+        <NavLink
+          to="/admin/subscribers"
+          onClick={() => onClose?.()}
+          className={({ isActive }) => `${linkBase} ${isActive ? 'nav-active' : ''}`}
+        >
+          <img src={assets.email_icon} alt="" className='min-w-4 w-5' />
+          <p>Subscribers</p>
+        </NavLink>
       </nav>
     </aside>
   )

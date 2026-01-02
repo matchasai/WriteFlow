@@ -10,6 +10,7 @@ import Dashboard from './pages/admin/Dashboard'
 import EditBlog from './pages/admin/EditBlog'
 import Layout from './pages/admin/Layout'
 import ListBlog from './pages/admin/ListBlog'
+import SubscribersPage from './pages/admin/SubscribersPage'
 import Blog from './pages/Blog'
 import Home from './pages/Home'
 
@@ -40,6 +41,7 @@ const App = () => {
           <Route path='blogs' element={<RouteTransition><ListBlog/></RouteTransition>} />
           <Route path='listBlog' element={<RouteTransition><ListBlog/></RouteTransition>} />
           <Route path='comments' element={<RouteTransition><Comments/></RouteTransition>} />
+          <Route path='subscribers' element={<RouteTransition><SubscribersPage/></RouteTransition>} />
         </Route>
       </Routes>
     </div>

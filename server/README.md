@@ -7,6 +7,7 @@ It’s responsible for:
 - Blog management (CRUD + publish toggle + views counter)
 - Comments and moderation (approve/delete)
 - Newsletter subscriptions
+- Newsletter email notifications (SMTP)
 - AI features:
   - Generate blog content (Gemini)
   - Generate SEO fields (meta description + tags)
@@ -24,6 +25,7 @@ It’s responsible for:
 - **Multer** (multipart/form-data file uploads)
 - **ImageKit** (image storage + transformation)
 - **Google Gemini** via `@google/genai` (AI content + SEO generation)
+- **Nodemailer** (SMTP email notifications)
 - Simple in-memory rate limiting (custom middleware)
 
 ---
@@ -91,6 +93,8 @@ Base URL (local): `http://localhost:3000`
 
 #### Newsletter
 - `POST /api/newsletter/subscribe`
+
+When SMTP is configured, subscribing also sends a welcome email with recent posts.
 
 ---
 
@@ -167,6 +171,10 @@ Required values (see `.env.example`):
 - `PORT`
 - `CLIENT_URL`
 - `NODE_ENV`
+
+For email notifications:
+- `MAIL_HOST`, `MAIL_PORT`, `MAIL_USERNAME`, `MAIL_PASSWORD`
+- `MAIL_FROM` (optional)
 
 Security notes:
 - Never commit `.env`.

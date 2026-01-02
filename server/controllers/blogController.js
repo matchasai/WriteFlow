@@ -4,12 +4,18 @@ import imagekit from '../config/imagekit.js';
 import { AppError } from '../middleware/errorHandler.js';
 import Blog from '../models/Blog.js';
 import Comment from '../models/Comment.js';
+import { sendNewBlogToSubscribers } from '../services/notifySubscribers.js';
 
 export const updateBlog = async (req, res, next) => {
     const imageFile = req.file;
     try {
         const { id } = req.params;
         const { title, subTitle, description, category, isPublished, metaDescription, tags, imageUrl } = JSON.parse(req.body.blog);
+
+        const existing = await Blog.findById(id);
+        if (!existing) {
+            throw new AppError("Blog not found", 404);
+        }
 
         if (!title || !description || !category) {
             throw new AppError("Title, description, and category are required", 400);
@@ -54,9 +60,10 @@ export const updateBlog = async (req, res, next) => {
         }
 
         const updatedBlog = await Blog.findByIdAndUpdate(id, updateData, { new: true });
-        
-        if (!updatedBlog) {
-            throw new AppError("Blog not found", 404);
+
+        // If it was a draft and is now published, notify subscribers.
+        if (existing.isPublished === false && updatedBlog?.isPublished === true) {
+            sendNewBlogToSubscribers(updatedBlog).catch(() => {});
         }
 
         res.status(200).json({ success: true, message: "Blog updated successfully", blog: updatedBlog });
@@ -107,7 +114,7 @@ export const addBlog = async (req, res, next) => {
             image = optimizedImageUrl;
         }
 
-        await Blog.create({
+        const createdBlog = await Blog.create({
             title,
             subTitle,
             description,
@@ -117,6 +124,10 @@ export const addBlog = async (req, res, next) => {
             metaDescription,
             tags
         });
+
+        if (createdBlog?.isPublished) {
+            sendNewBlogToSubscribers(createdBlog).catch(() => {});
+        }
 
         res.status(201).json({ success: true, message: "Blog added successfully" });
     } catch (error) {
@@ -231,8 +242,13 @@ export const togglePublish = async (req, res, next) => {
             throw new AppError("Blog not found", 404);
         }
 
+        const wasPublished = blog.isPublished;
         blog.isPublished = !blog.isPublished;
         await blog.save();
+
+        if (wasPublished === false && blog.isPublished === true) {
+            sendNewBlogToSubscribers(blog).catch(() => {});
+        }
 
         res.status(200).json({ success: true, message: "Blog publish status updated" });
     } catch (error) {

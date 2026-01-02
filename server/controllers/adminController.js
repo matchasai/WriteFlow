@@ -2,6 +2,7 @@ import jwt from 'jsonwebtoken';
 import { AppError } from '../middleware/errorHandler.js';
 import Blog from '../models/Blog.js';
 import Comment from '../models/Comment.js';
+import Subscriber from '../models/Subscriber.js';
 
 export const adminLogin = async (req, res, next) => {
     try {
@@ -85,6 +86,30 @@ export const approveCommentById = async (req, res, next) => {
         }
 
         res.status(200).json({ success: true, message: "Comment approved successfully" });
+    } catch (error) {
+        next(error);
+    }
+};
+
+export const getAllSubscribers = async (req, res, next) => {
+    try {
+        const subscribers = await Subscriber.find({}).sort({ createdAt: -1 });
+        res.status(200).json({ success: true, subscribers });
+    } catch (error) {
+        next(error);
+    }
+};
+
+export const deleteSubscriberById = async (req, res, next) => {
+    try {
+        const { id } = req.params;
+
+        const subscriber = await Subscriber.findByIdAndDelete(id);
+        if (!subscriber) {
+            throw new AppError('Subscriber not found', 404);
+        }
+
+        res.status(200).json({ success: true, message: 'Subscriber removed successfully' });
     } catch (error) {
         next(error);
     }

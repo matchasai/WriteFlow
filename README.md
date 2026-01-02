@@ -29,6 +29,7 @@ This repository is split into two parts:
 
 ### Newsletter
 - Email subscription endpoint
+- Email notifications for newly published blogs (SMTP)
 
 ### AI Tools
 - Generate blog content (Markdown) with Gemini
