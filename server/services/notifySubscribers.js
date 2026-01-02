@@ -15,8 +15,16 @@ const chunk = (arr, size) => {
 };
 
 export const buildBlogUrl = (blogId) => {
-  const base = process.env.CLIENT_URL || 'http://localhost:5173';
-  return `${base.replace(/\/$/, '')}/blog/${blogId}`;
+  const publicBase =
+    process.env.PUBLIC_SITE_URL ||
+    process.env.PUBLIC_APP_URL ||
+    process.env.APP_URL ||
+    process.env.CLIENT_URL ||
+    (process.env.NODE_ENV === 'production'
+      ? 'https://writeflow-zfes.onrender.com'
+      : 'http://localhost:5173');
+
+  return `${String(publicBase).replace(/\/$/, '')}/blog/${blogId}`;
 };
 
 export const buildNewBlogEmail = (blog) => {
