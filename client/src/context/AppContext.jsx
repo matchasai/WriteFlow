@@ -3,7 +3,8 @@ import { createContext, useContext, useEffect, useRef, useState } from 'react';
 import toast from 'react-hot-toast';
 import { useNavigate } from 'react-router-dom';
 
-axios.defaults.baseURL = import.meta.env.VITE_BASE_URL || 'http://localhost:3000';
+const defaultBaseUrl = import.meta.env.DEV ? 'http://localhost:3000' : '';
+axios.defaults.baseURL = import.meta.env.VITE_BASE_URL || defaultBaseUrl;
 
 const AppContext = createContext()
 
