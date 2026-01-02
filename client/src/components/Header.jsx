@@ -24,18 +24,18 @@ const Header = () => {
         <div className='text-center mt-20 mb-8'>
 
             <div className='inline-flex items-center justify-center gap-4 px-6 py-1.5 mb-4 chip chip-selected'>
-                <p>New: AI feature integrated</p>
+                <p>Welcome to my blog</p>
                 <img src={assets.star_icon} className='w-2.5' alt="" />
             </div>
 
-            <h1 className='text-3xl sm:text-6xl font-semibold sm:leading-16 text-gray-800 gradient-text'>Your own blogging <br /> platform.</h1>
+            <h1 className='text-3xl sm:text-6xl font-semibold sm:leading-16 text-gray-800 gradient-text'>Thoughts, stories &amp;<br /> things I’m learning.</h1>
             <p className='my-6 sm:my-8 max-w-2xl m-auto max-sm:text-xs text-gray-500'>
-                This is your personal blog platform where you can share your thoughts, ideas, and stories with the world.
-                Whether you're a seasoned writer or just starting out, our platform provides the tools and features you need to create and publish your content with ease.
+                A personal space to share writing, ideas, and notes.
+                Search posts by title, category, tags, or keywords.
             </p>
 
             <form onSubmit={onSubmitHandler} className='flex flex-col sm:flex-row items-stretch max-w-lg mx-auto border border-gray-200 bg-white rounded overflow-hidden slide-up'>
-                <input id="search-query" name="search" ref={inputRef} type="text" placeholder='Search your blog...' required aria-label="Search blogs" className='w-full px-4 py-3 sm:py-0 outline-none bg-transparent text-gray-800'/>
+                <input id="search-query" name="search" ref={inputRef} type="text" placeholder='Search posts...' required aria-label="Search blogs" className='w-full px-4 py-3 sm:py-0 outline-none bg-transparent text-gray-800'/>
                 <button type="submit" className='btn-gradient px-6 sm:px-8 py-2 m-1.5 cursor-pointer'>Search</button>
             </form>
 

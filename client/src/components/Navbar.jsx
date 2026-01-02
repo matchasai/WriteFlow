@@ -1,11 +1,10 @@
 import { useNavigate } from 'react-router-dom';
-import { assets } from '../assets/assets';
 import { useAppContext } from '../context/AppContext';
 
 const Navbar = () => {
   
   const routerNavigate = useNavigate();
-  const {navigate, token, accentMode, cycleAccent} = useAppContext();
+  const {navigate, accentMode, cycleAccent} = useAppContext();
   const safeNavigate = (to) => {
     try {
       if (typeof navigate === 'function') navigate(to);
@@ -73,24 +72,6 @@ const Navbar = () => {
             <span className='w-2.5 h-2.5 rounded-full' style={{ background: 'var(--gradient-primary)' }}></span>
             <span className='hidden sm:inline'>{accentMode === 'aurora' ? 'Aurora' : accentMode === 'bold' ? 'Bold' : 'Cool'}</span>
             <span className='sm:hidden'>{accentMode === 'aurora' ? 'A' : accentMode === 'bold' ? 'B' : 'C'}</span>
-          </button>
-          <button
-            type="button"
-            onClick={() => {
-              const dest = token ? '/admin' : '/login';
-              safeNavigate(dest);
-            }}
-            onKeyDown={(e) => {
-              if (e.key === 'Enter' || e.key === ' ') {
-                e.preventDefault();
-                const dest = token ? '/admin' : '/login';
-                safeNavigate(dest);
-              }
-            }}
-            className='flex items-center gap-2 rounded-full text-xs sm:text-sm cursor-pointer bg-black/25 hover:bg-black/35 text-white px-3 py-1.5 sm:px-6 sm:py-2 transition active:scale-95'
-          >
-            {token ? 'Dashboard' : 'Login'}
-            <img src={assets.arrow} className='w-3 invert' alt="arrow" />
           </button>
         </div>
     </div>
