@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 420 120" role="img" aria-labelledby="logoTitle">
+	<title id="logoTitle">WriteFlow</title>
+	<defs>
+		<linearGradient id="wfGradient" x1="0" y1="0" x2="1" y2="1">
+			<stop offset="0%" stop-color="#6366F1"/>
+			<stop offset="60%" stop-color="#8B5CF6"/>
+			<stop offset="100%" stop-color="#06B6D4"/>
+		</linearGradient>
+	</defs>
+
+	<g transform="translate(12,12)">
+		<rect x="8" y="8" width="96" height="96" rx="18" fill="url(#wfGradient)"/>
+		<path d="M55 88l12-36 28-28 10 10-28 28-32 26z" fill="#fff" opacity="0.94"/>
+	</g>
+
+	<text x="130" y="76" font-family="Inter, Arial, sans-serif" font-size="44" font-weight="700" fill="#0F172A">
+		WriteFlow
+	</text>
+</svg>

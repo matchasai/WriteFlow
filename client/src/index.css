@@ -1,0 +1,304 @@
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@100..900&family=Inter:wght@300..800&family=Playfair+Display:ital,wght@0,400..900;1,400..900&display=swap');
+@import "tailwindcss";
+
+
+*{ font-family: "Inter", system-ui, -apple-system, Segoe UI, Roboto, Ubuntu, Cantarell, "Helvetica Neue", Arial, "Noto Sans", sans-serif; }
+
+:root{
+  /* Brand palette */
+  --brand-indigo: #6366f1; /* indigo-500 */
+  --brand-violet: #8b5cf6; /* violet-500 */
+  --brand-cyan: #06b6d4;   /* cyan-500 */
+  --brand-pink: #ec4899;   /* pink-500 */
+  --brand-amber: #f59e0b;  /* amber-500 */
+  --brand-surface: #ffffff;
+  --brand-text: #0f172a; /* slate-900 */
+  --brand-muted: #475569; /* slate-600 */
+  --color-primary: #4F46E5;
+  --primary-rgb: 79, 70, 229;
+  --accent-rgb: 99, 102, 241;
+
+  /* Gradients */
+  --gradient-primary: linear-gradient(90deg, var(--brand-indigo), var(--brand-violet));
+  --gradient-accent: linear-gradient(90deg, var(--brand-pink), var(--brand-amber));
+  --gradient-aurora: linear-gradient(90deg, var(--brand-indigo), var(--brand-violet), var(--brand-cyan));
+}
+
+/* Accent boost mode: stronger, warmer gradients without dark background */
+.accent-bold,
+[data-accent="bold"]{
+  --gradient-primary: var(--gradient-accent);
+  --gradient-aurora: var(--gradient-accent);
+}
+
+/* Cool mode: crisp blue->cyan accent without changing overall theme */
+[data-accent="cool"]{
+  --accent-rgb: 6, 182, 212;
+  --gradient-primary: linear-gradient(90deg, var(--brand-indigo), var(--brand-cyan));
+  --gradient-aurora: linear-gradient(90deg, var(--brand-indigo), var(--brand-cyan), var(--brand-violet));
+}
+
+/* Visible scrollbars (needed for in-card/table/editor scrolling) */
+::-webkit-scrollbar{ width: 10px; height: 10px; }
+::-webkit-scrollbar-track{ background: rgba(15,23,42,0.06); }
+::-webkit-scrollbar-thumb{ background: rgba(100,116,139,0.35); border-radius: 9999px; border: 2px solid rgba(15,23,42,0.06); }
+::-webkit-scrollbar-thumb:hover{ background: rgba(100,116,139,0.55); }
+html{ scrollbar-width: thin; scrollbar-color: rgba(100,116,139,0.45) rgba(15,23,42,0.06); }
+
+@theme{
+  --color-primary: #4F46E5;
+}
+
+.rich-text { font-size: 15px;  }
+
+.rich-text p { margin-bottom: 16px; color: #292929; }
+
+.rich-text h1 { font-size: 36px; font-weight: 700; color: #252525 !important; margin: 32px 0; line-height: 1.25; }
+
+.rich-text h2 { font-size: 22px; font-weight: 700; color: #252525 !important; margin: 24px 0; line-height: 1.35; }
+
+.rich-text h3 { font-size: 18px; font-weight: 600; color: #333333 !important; margin: 20px 0; }
+
+.rich-text h4 { font-size: 16px; font-weight: 500; color: #444444 !important; margin: 16px 0; }
+
+.rich-text h5 { font-size: 14px; font-weight: 400; color: #555555 !important; margin: 12px 0; }
+
+.rich-text h6 { font-size: 12px; font-weight: 400; color: #666666 !important; margin: 8px 0; }
+
+.rich-text strong { font-weight: 700; }
+
+.rich-text ol { margin-left: 30px; list-style-type: decimal; }
+
+.rich-text ul { margin-left: 30px; list-style-type: disc; }
+
+.rich-text li { margin-bottom: 8px; }
+
+.rich-text a { color: #007AFF }
+
+/* Dark mode overrides for rich text */
+.dark .rich-text { color: #e5e7eb; }
+.dark .rich-text p { color: #e5e7eb; }
+.dark .rich-text h1 { color: #f3f4f6 !important; }
+.dark .rich-text h2 { color: #f3f4f6 !important; }
+.dark .rich-text h3 { color: #e5e7eb !important; }
+.dark .rich-text h4 { color: #e5e7eb !important; }
+.dark .rich-text h5 { color: #d1d5db !important; }
+.dark .rich-text h6 { color: #d1d5db !important; }
+.dark .rich-text a { color: #93c5fd; }
+
+/* ---------- Brand utilities ---------- */
+.gradient-text{
+  background: var(--gradient-aurora);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.serif-title{ font-family: "Playfair Display", Georgia, serif; letter-spacing: .2px; }
+
+.btn-gradient{
+  background: var(--gradient-primary);
+  color: #fff;
+  border-radius: 9999px;
+  padding: 0.5rem 1rem;
+  box-shadow: 0 8px 20px rgba(var(--accent-rgb),0.25);
+  transition: transform .25s ease, box-shadow .25s ease, filter .25s ease;
+}
+.btn-gradient:hover{ transform: translateY(-1px); filter: brightness(1.05); box-shadow: 0 10px 24px rgba(var(--accent-rgb),0.35); }
+.btn-gradient:active{ transform: translateY(0); filter: brightness(0.98); }
+
+.card{
+  background: var(--brand-surface);
+  border-radius: .75rem;
+  border: 1px solid rgba(var(--primary-rgb),.12);
+  box-shadow: 0 6px 18px rgba(17,24,39,.06);
+  transition: transform .25s ease, box-shadow .25s ease;
+}
+.card:hover{ transform: translateY(-2px); box-shadow: 0 12px 28px rgba(var(--accent-rgb),.20); }
+
+.chip{
+  display:inline-flex; align-items:center; gap:.35rem;
+  font-size: .75rem; line-height: 1;
+  padding: .4rem .65rem; border-radius: 9999px;
+  color: var(--brand-muted); background: rgba(var(--primary-rgb),.10); border: 1px solid rgba(var(--primary-rgb),.18);
+}
+.chip-selected{ color:#fff; background: var(--gradient-primary); border: 0; box-shadow: 0 8px 18px rgba(var(--primary-rgb),.28); }
+.chip-contrast{ color:#fff; background:#0f172a; border: 0; }
+
+/* ---------- Motion ---------- */
+.fade-in{ animation: fadeIn .6s ease-out both; }
+.slide-up{ animation: slideUp .6s ease-out both; }
+@keyframes fadeIn{ from{ opacity:0 } to{ opacity:1 } }
+@keyframes slideUp{ from{ opacity:0; transform: translateY(8px) } to{ opacity:1; transform: translateY(0) } }
+
+/* Improve focus visibility */
+button:focus-visible, a:focus-visible{ outline: 3px solid rgba(99,102,241,.45); outline-offset: 2px; border-radius: .5rem; }
+
+/* ---------- Quill editor polish ---------- */
+.blog-editor{
+  border: 1px solid rgba(79,70,229,.18);
+  border-radius: .75rem;
+  background: #fff;
+}
+.blog-editor .ql-toolbar.ql-snow{
+  border: 0;
+  border-bottom: 1px solid rgba(79,70,229,.14);
+  border-radius: .75rem .75rem 0 0;
+  background: linear-gradient(180deg, rgba(99,102,241,.08), rgba(139,92,246,.06));
+  box-shadow: none;
+}
+.blog-editor .ql-container.ql-snow{
+  border: 0;
+  border-radius: 0 0 .75rem .75rem;
+  height: 100%;
+}
+.blog-editor .ql-editor{ min-height: 260px; }
+
+.ql-toolbar.ql-snow{
+  border: 1px solid rgba(79,70,229,.18);
+  border-radius: .75rem .75rem 0 0;
+  background: linear-gradient(180deg, rgba(99,102,241,.08), rgba(139,92,246,.06));
+  box-shadow: 0 6px 18px rgba(17,24,39,.06);
+}
+.ql-container.ql-snow{
+  border: 1px solid rgba(79,70,229,.18);
+  border-top: 0;
+  border-radius: 0 0 .75rem .75rem;
+}
+.ql-toolbar button:hover{ background-color: rgba(99,102,241,.10); border-radius: .4rem; }
+.ql-toolbar .ql-picker, .ql-toolbar .ql-stroke{ color: var(--brand-muted); stroke: var(--brand-muted); }
+.ql-toolbar .ql-picker-label:hover{ color: var(--brand-text); }
+
+/* ---------- Admin nav active ---------- */
+.nav-active{
+  background: linear-gradient(90deg, rgba(99,102,241,.10), rgba(139,92,246,.10));
+  border-right: 4px solid var(--color-primary);
+}
+
+/* ---------- Admin action buttons (tables) ---------- */
+.admin-action-btn{
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: .35rem;
+  border-radius: 9999px;
+  padding: .35rem .7rem;
+  font-size: .75rem;
+  line-height: 1;
+  font-weight: 600;
+  border: 1px solid rgba(15,23,42,0.12);
+  background: #ffffff;
+  color: #334155;
+  transition: background-color .2s ease, border-color .2s ease, transform .12s ease;
+  white-space: nowrap;
+}
+.admin-action-btn:hover{ background: rgba(15,23,42,0.04); }
+.admin-action-btn:active{ transform: translateY(1px); }
+
+.admin-action-btn-primary{
+  border-color: rgba(var(--primary-rgb),.30);
+  color: rgb(var(--primary-rgb));
+}
+.admin-action-btn-success{
+  border-color: rgba(22,163,74,.28);
+  color: #16a34a;
+}
+.admin-action-btn-danger{
+  border-color: rgba(220,38,38,.28);
+  color: #dc2626;
+}
+.admin-action-btn-muted{
+  border-color: rgba(100,116,139,.22);
+  color: #475569;
+}
+
+/* ---------- Skeleton utilities ---------- */
+.skeleton{
+  position: relative; overflow: hidden; background: rgba(148,163,184,.18);
+}
+.skeleton::after{
+  content: ""; position: absolute; inset: 0; transform: translateX(-100%);
+  background: linear-gradient(90deg, rgba(255,255,255,0) 0%, rgba(255,255,255,0.6) 50%, rgba(255,255,255,0) 100%);
+  animation: shimmer 1.2s infinite;
+}
+@keyframes shimmer{ 100% { transform: translateX(100%); } }
+
+.skeleton-box{ height: 1rem; border-radius: .5rem; }
+.skeleton-text{ height: .75rem; border-radius: .4rem; }
+.skeleton-rounded{ border-radius: .75rem; }
+
+/* Ensure navbar remains clickable even when global accent class is enabled */
+.accent-bold .site-nav, .accent-bold .site-nav *,
+[data-accent="bold"] .site-nav, [data-accent="bold"] .site-nav *{
+  pointer-events: auto !important;
+}
+
+/* Ensure navbar buttons always show pointer cursor */
+.site-nav button{ cursor: pointer; }
+.site-nav button:disabled{ cursor: not-allowed; }
+
+/* Admin surface: use variable-driven background so accent mode can target admin areas */
+.admin-surface{
+  /* Soft cyan base so blue/cyan translucent gradients look visible */
+  background-color: rgba(240, 248, 255, 0.9);
+}
+.accent-bold .admin-surface, [data-accent="bold"] .admin-surface{
+  /* Keep the same base; pages still control gradients */
+  background-color: rgba(240, 248, 255, 0.9);
+}
+
+/* Make cards a bit warmer under accent-bold for admin surfaces */
+.accent-bold .card, [data-accent="bold"] .card{
+  border-color: rgba(245,158,11,0.12);
+  box-shadow: 0 10px 28px rgba(245,158,11,0.08);
+}
+
+/* Admin centered card used in dashboard, lists, and comments */
+.admin-card{
+  max-width: 980px;
+  margin: 1.25rem auto;
+  background: #ffffff;
+  padding: 1.25rem 1.5rem;
+  border-radius: 12px;
+  box-shadow: 0 20px 45px rgba(15,23,42,0.10);
+  border: 1px solid rgba(15,23,42,0.06);
+}
+.accent-bold .admin-card, [data-accent="bold"] .admin-card{
+  background: #ffffff;
+  border-color: rgba(15,23,42,0.06);
+  box-shadow: 0 20px 45px rgba(15,23,42,0.10);
+}
+
+/* Newsletter form polish: precise paddings, colors and focus shadow */
+.newsletter-form input{
+  padding: 16px 18px;
+  border-radius: 9999px 0 0 9999px;
+  border: 1px solid rgba(15,23,42,0.06);
+  background: #ffffff;
+  font-size: 16px;
+  color: #374151;
+  box-shadow: none;
+}
+.newsletter-form button{
+  border-radius: 0 9999px 9999px 0;
+  padding: 10px 26px;
+  background: var(--gradient-primary);
+  box-shadow: 0 8px 24px rgba(var(--accent-rgb),0.18);
+  color: #ffffff;
+  font-weight: 600;
+  border: 0;
+}
+
+/* stronger focus ring for accessibility and visual polish */
+input:focus-visible, .newsletter-form input:focus-visible{
+  outline: 0;
+  box-shadow: 0 12px 30px rgba(var(--accent-rgb),0.12);
+  border-color: rgba(var(--primary-rgb),0.55);
+}
+
+/* Mobile: stack control and make button full width */
+@media (max-width: 560px){
+  .newsletter-form{ flex-direction: column; gap:10px; }
+  .newsletter-form input{ border-radius: 9999px; }
+  .newsletter-form button{ border-radius: 9999px; width:100%; padding-left:22px; padding-right:22px }
+}
