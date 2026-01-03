@@ -1,6 +1,9 @@
 import cors from 'cors';
 import 'dotenv/config';
 import express from 'express';
+import fs from 'fs';
+import path from 'path';
+import { fileURLToPath } from 'url';
 import connectDB from './config/db.js';
 import { errorHandler } from './middleware/errorHandler.js';
 import { apiLimiter } from './middleware/rateLimiter.js';
@@ -11,6 +14,9 @@ import newsletterRouter from './routes/newsletterRoutes.js';
 process.setMaxListeners(20);
 
 const app = express();
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 // If deployed behind a reverse proxy (Render/Vercel/Nginx), this allows req.ip to be the real client IP.
 app.set('trust proxy', 1);
@@ -24,14 +30,44 @@ try {
 }
 
 // CORS Configuration
-const corsOptions = {
-    origin: process.env.CLIENT_URL || 'http://localhost:5173',
-    credentials: true,
-    optionsSuccessStatus: 200
+const parseAllowedOrigins = () => {
+    const raw = process.env.CLIENT_URL || '';
+    return raw
+        .split(',')
+        .map((s) => s.trim())
+        .filter(Boolean);
+};
+
+const isSameHostOrigin = (origin, host) => {
+    if (!origin || !host) return false;
+    try {
+        const url = new URL(origin);
+        return url.host === host;
+    } catch {
+        return false;
+    }
+};
+
+const corsOptionsDelegate = (req, callback) => {
+    const requestOrigin = req.header('Origin');
+    const requestHost = req.header('Host');
+    const allowedOrigins = parseAllowedOrigins();
+
+    const allowOrigin =
+        !requestOrigin ||
+        allowedOrigins.length === 0 ||
+        allowedOrigins.includes(requestOrigin) ||
+        isSameHostOrigin(requestOrigin, requestHost);
+
+    callback(null, {
+        origin: allowOrigin,
+        credentials: true,
+        optionsSuccessStatus: 200
+    });
 };
 
 // Middleware
-app.use(cors(corsOptions));
+app.use(cors(corsOptionsDelegate));
 app.use(express.json({ limit: '10mb' }));
 app.use(express.urlencoded({ extended: true, limit: '10mb' }));
 
@@ -39,10 +75,25 @@ app.use(express.urlencoded({ extended: true, limit: '10mb' }));
 app.use('/api/', apiLimiter);
 
 // Routes
-app.get('/', (req, res) => res.send("API is working"));
+app.get('/api/health', (req, res) => res.json({ success: true }));
 app.use('/api/admin', adminRouter);
 app.use('/api/blogs', blogRouter);
 app.use('/api/newsletter', newsletterRouter);
+
+// Optional: serve the built client (SPA) in production.
+// This fixes direct navigation to /login, /admin, etc. by returning index.html.
+const distDir = path.resolve(__dirname, '../client/dist');
+const indexHtmlPath = path.join(distDir, 'index.html');
+const shouldServeClient = process.env.SERVE_CLIENT === 'true' || process.env.NODE_ENV === 'production';
+
+if (shouldServeClient && fs.existsSync(indexHtmlPath)) {
+    app.use(express.static(distDir));
+
+    app.get('*', (req, res, next) => {
+        if (req.path.startsWith('/api/')) return next();
+        return res.sendFile(indexHtmlPath);
+    });
+}
 
 // 404 handler
 app.use((req, res) => {
