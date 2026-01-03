@@ -34,7 +34,7 @@ const parseAllowedOrigins = () => {
     const raw = process.env.CLIENT_URL || '';
     return raw
         .split(',')
-        .map((s) => s.trim())
+    .map((s) => s.trim().replace(/\/+$/, ''))
         .filter(Boolean);
 };
 
@@ -82,17 +82,42 @@ app.use('/api/newsletter', newsletterRouter);
 
 // Optional: serve the built client (SPA) in production.
 // This fixes direct navigation to /login, /admin, etc. by returning index.html.
-const distDir = path.resolve(__dirname, '../client/dist');
-const indexHtmlPath = path.join(distDir, 'index.html');
+//
+// Render monorepo note:
+// If you configure the service with rootDir: server, it's safest to build the client into
+// server/public so the assets are guaranteed to be present at runtime.
 const shouldServeClient = process.env.SERVE_CLIENT === 'true' || process.env.NODE_ENV === 'production';
+const distCandidates = [
+    path.resolve(__dirname, 'public'),
+    path.resolve(__dirname, '../client/dist'),
+];
 
-if (shouldServeClient && fs.existsSync(indexHtmlPath)) {
-    app.use(express.static(distDir));
+let distDir = null;
+let indexHtmlPath = null;
 
-    app.get('*', (req, res, next) => {
-        if (req.path.startsWith('/api/')) return next();
-        return res.sendFile(indexHtmlPath);
-    });
+for (const candidate of distCandidates) {
+    const candidateIndex = path.join(candidate, 'index.html');
+    if (fs.existsSync(candidateIndex)) {
+        distDir = candidate;
+        indexHtmlPath = candidateIndex;
+        break;
+    }
+}
+
+if (shouldServeClient) {
+    if (distDir && indexHtmlPath) {
+        app.use(express.static(distDir));
+
+        app.get('*', (req, res, next) => {
+            if (req.path.startsWith('/api/')) return next();
+            return res.sendFile(indexHtmlPath);
+        });
+    } else {
+        console.warn(
+            '[SPA] Client build not found. Searched:',
+            distCandidates.map((p) => p.replaceAll('\\', '/')).join(', ')
+        );
+    }
 }
 
 // 404 handler
