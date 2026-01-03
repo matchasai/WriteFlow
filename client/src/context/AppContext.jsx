@@ -3,8 +3,22 @@ import { createContext, useContext, useEffect, useRef, useState } from 'react';
 import toast from 'react-hot-toast';
 import { useNavigate } from 'react-router-dom';
 
-const defaultBaseUrl = import.meta.env.DEV ? 'http://localhost:3000' : '';
-axios.defaults.baseURL = import.meta.env.VITE_BASE_URL || defaultBaseUrl;
+const normalizeBaseUrl = (value) => {
+    if (!value) return '';
+    return String(value).trim().replace(/\/+$/, '');
+};
+
+// IMPORTANT:
+// - In production, this app is often deployed as a Static Site (no `/api/*` routes).
+// - If `VITE_BASE_URL` is missing at build time, axios would default to same-origin and API calls will 404.
+// - We keep an explicit production fallback so the public site still loads data.
+const FALLBACK_PROD_API_BASE_URL = 'https://writeflow-backend-59xh.onrender.com';
+
+const defaultBaseUrl = import.meta.env.DEV
+    ? 'http://localhost:3000'
+    : FALLBACK_PROD_API_BASE_URL;
+
+axios.defaults.baseURL = normalizeBaseUrl(import.meta.env.VITE_BASE_URL) || defaultBaseUrl;
 
 const AppContext = createContext()
 

@@ -128,8 +128,14 @@ html{ scrollbar-width: thin; scrollbar-color: rgba(100,116,139,0.45) rgba(15,23,
 /* ---------- Motion ---------- */
 .fade-in{ animation: fadeIn .6s ease-out both; }
 .slide-up{ animation: slideUp .6s ease-out both; }
+.float-slow{ animation: floatY 6s ease-in-out infinite; }
 @keyframes fadeIn{ from{ opacity:0 } to{ opacity:1 } }
 @keyframes slideUp{ from{ opacity:0; transform: translateY(8px) } to{ opacity:1; transform: translateY(0) } }
+@keyframes floatY{ 0%,100%{ transform: translateY(0) } 50%{ transform: translateY(-8px) } }
+
+@media (prefers-reduced-motion: reduce){
+  .fade-in, .slide-up, .float-slow{ animation: none !important; }
+}
 
 /* Improve focus visibility */
 button:focus-visible, a:focus-visible{ outline: 3px solid rgba(99,102,241,.45); outline-offset: 2px; border-radius: .5rem; }
